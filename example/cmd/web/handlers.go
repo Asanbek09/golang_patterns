@@ -29,3 +29,7 @@ func (app *application) CreateCatFromFactory(w http.ResponseWriter, r *http.Requ
 
 	_ = t.WriteJSON(w, http.StatusOK, pets.NewPet("cat"))
 }
+
+func (app *application) TestPatterns(w http.ResponseWriter, r *http.Request) {
+	app.render(w, "test.page.gohtml", nil)
+}
