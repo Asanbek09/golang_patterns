@@ -57,6 +57,6 @@ func NewPetFromAbstractFactory(species string) (AnimalInterface, error) {
 		cat := catFactory.newPet()
 		return cat, nil
 	default:
-		return nil, errors.New("Invalid species supplied")
+		return nil, errors.New("invalid species supplied")
 	}
 }
