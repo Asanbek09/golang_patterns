@@ -46,7 +46,7 @@ func (app *application) CreateDogFromAbstractFactory(w http.ResponseWriter, r *h
 
 func (app *application) CreateCatFromAbstractFactory(w http.ResponseWriter, r *http.Request) {
 	var t toolbox.Tools
-	cat, err := pets.NewPetFromAbstractFactory("dog")
+	cat, err := pets.NewPetFromAbstractFactory("cat")
 	if err != nil {
 		_ = t.ErrorJSON(w, err, http.StatusBadRequest)
 		return
