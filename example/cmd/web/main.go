@@ -29,7 +29,7 @@ func main() {
 	}
 
 	flag.BoolVar(&app.config.useCache, "cache", false, "Use template cache")
-	flag.StringVar(&app.config.dsn, "dsn", "postgres://postgres:password@localhost:5432/breeders?sslmode=disable", "DSN")
+	flag.StringVar(&app.config.dsn, "dsn", "postgres://postgres:secretPassword@localhost:5432/breeders?sslmode=disable", "DSN")
 	flag.Parse()
 
 	// get database
