@@ -11,7 +11,17 @@ type postgresRepository struct {
 }
 
 func newPostgresRepository(conn *sql.DB) Repository {
-	return &postgresRepository {
+	return &postgresRepository{
 		DB: conn,
+	}
+}
+
+type testRepository struct {
+	DB *sql.DB
+}
+
+func newTestRepository(conn *sql.DB) Repository {
+	return &testRepository{
+		DB: nil,
 	}
 }
