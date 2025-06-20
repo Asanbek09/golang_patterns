@@ -13,7 +13,6 @@ const (
 	maxDBLifetime = 5 * time.Minute
 )
 
-
 func initPostgresDB(dsn string) (*sql.DB, error) {
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
