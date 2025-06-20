@@ -5,7 +5,7 @@ type Pet struct {
 	Breed string `json:"breed"`
 	MinWeight int `json:"min_weight,omitempty"`
 	MaxWeight int `json:"max_weight,omitempty"`
-	Average int `json:"average_weight,omitempty"`
+	AverageWeight int `json:"average_weight,omitempty"`
 	Weight int `json:"weight,omitempty"`
 	Description string `json:"description,omitempty"`
 	LifeSpan int `json:"lifespan,omitempty"`
