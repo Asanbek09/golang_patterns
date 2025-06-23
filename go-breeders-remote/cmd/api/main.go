@@ -27,11 +27,11 @@ func main() {
 	var config appConfig
 
 	// read command line parameters, if any, and set sensible defaults for development
-	flag.StringVar(&config.dsn, "dsn", "mariadb:myverysecretpassword@tcp(localhost:3306)/breeders?parseTime=true&tls=false&collation=utf8_unicode_ci&timeout=5s&readTimeout5", "DSN")
+	flag.StringVar(&config.dsn, "dsn", "postgres://postgres:secretPassword@localhost:5432/breeders?sslmode=disable", "DSN")
 	flag.Parse()
 
 	// get database
-	db, err := initMySQLDB(config.dsn)
+	db, err := initPostgresDB(config.dsn)
 	if err != nil {
 		log.Fatal(err)
 	}

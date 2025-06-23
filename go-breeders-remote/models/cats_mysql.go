@@ -11,7 +11,7 @@ func (m *mysqlRepository) GetCatBreedByID(id int) (*CatBreed, error) {
 	defer cancel()
 
 	query := `select id, breed, weight_low_lbs, weight_high_lbs,
-       			cast(((weight_low_lbs + weight_high_lbs) / 2) as unsigned) as average_weight,
+       			((weight_low_lbs + weight_high_lbs) / 2)::INTEGER as average_weight,
 				lifespan, coalesce(details, ''),
 				coalesce(alternate_names, ''), coalesce(geographic_origin, '') 
 				from cat_breeds where id = ?`
@@ -41,7 +41,7 @@ func (m *mysqlRepository) GetCatBreedByName(id string) (*CatBreed, error) {
 	defer cancel()
 
 	query := `select id, breed, weight_low_lbs, weight_high_lbs,
-       			cast(((weight_low_lbs + weight_high_lbs) / 2) as unsigned) as average_weight,
+       			((weight_low_lbs + weight_high_lbs) / 2)::INTEGER as average_weight,
 				lifespan, coalesce(details, ''),
 				coalesce(alternate_names, ''), coalesce(geographic_origin, '') 
 				from cat_breeds where breed = ?`
@@ -100,7 +100,7 @@ func (m *mysqlRepository) AllCatBreeds() ([]*CatBreed, error) {
 	defer cancel()
 
 	query := `select id, breed, weight_low_lbs, weight_high_lbs,
-       			cast(((weight_low_lbs + weight_high_lbs) / 2) as unsigned) as average_weight,
+       			((weight_low_lbs + weight_high_lbs) / 2)::INTEGER as average_weight,
 				lifespan, coalesce(details, ''),
 				coalesce(alternate_names, ''), coalesce(geographic_origin, '') 
 				from cat_breeds order by breed`

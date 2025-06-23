@@ -6,6 +6,7 @@ import (
 	_ "github.com/jackc/pgconn" // need this and next two for pgx
 	_ "github.com/jackc/pgx/v5"
 	_ "github.com/jackc/pgx/v5/stdlib"
+	_ "github.com/lib/pq"
 	"time"
 )
 
@@ -16,7 +17,7 @@ const (
 )
 
 func initMySQLDB(dsn string) (*sql.DB, error) {
-	db, err := sql.Open("mysql", dsn)
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		return nil, err
 	}
