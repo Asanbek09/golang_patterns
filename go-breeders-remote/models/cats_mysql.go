@@ -14,7 +14,7 @@ func (m *mysqlRepository) GetCatBreedByID(id int) (*CatBreed, error) {
        			((weight_low_lbs + weight_high_lbs) / 2)::INTEGER as average_weight,
 				lifespan, coalesce(details, ''),
 				coalesce(alternate_names, ''), coalesce(geographic_origin, '') 
-				from cat_breeds where id = ?`
+				from cat_breeds where id ilike ?`
 
 	row := m.DB.QueryRowContext(ctx, query, id)
 	var cat CatBreed
@@ -44,7 +44,7 @@ func (m *mysqlRepository) GetCatBreedByName(id string) (*CatBreed, error) {
        			((weight_low_lbs + weight_high_lbs) / 2)::INTEGER as average_weight,
 				lifespan, coalesce(details, ''),
 				coalesce(alternate_names, ''), coalesce(geographic_origin, '') 
-				from cat_breeds where breed = ?`
+				from cat_breeds where breed ilike $1`
 
 	row := m.DB.QueryRowContext(ctx, query, id)
 	var cat CatBreed
