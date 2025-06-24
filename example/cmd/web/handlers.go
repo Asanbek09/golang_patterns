@@ -4,6 +4,7 @@ import (
 	"example/pets"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/tsawler/toolbox"
@@ -107,12 +108,22 @@ func (app *application) GetAllCatBreeds(w http.ResponseWriter, r *http.Request) 
 
 func (app *application) AnimalFromAbstractFactory(w http.ResponseWriter, r *http.Request) {
 	// setup toolbox
+	var t toolbox.Tools
 
 	// get species from url itself
-
+	species := chi.URLParam(r, "species")
+	
 	// get breed from the url
+	b := chi.URLParam(r, "breed")
+	breed, _ := url.QueryUnescape(b)
 
 	// create a pet from abstract factory
+	pet, err := pets.NewPetWithBreedFromAbstractFactory(species, breed)
+	if err != nil {
+		_ = t.ErrorJSON(w, err, http.StatusBadRequest)
+		return
+	}
 
 	// write the result as json
+	_ = t.WriteJSON(w, http.StatusOK, pet)
 }
