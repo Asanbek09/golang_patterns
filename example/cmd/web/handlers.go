@@ -71,7 +71,7 @@ func (app *application) CreateDogWithBuilder(w http.ResponseWriter, r *http.Requ
 
 	// create a dog using the builder pattern
 	p, err := pets.NewPetBuilder().SetSpecies("dog").SetBreed("mixed breed").SetWeight(15).SetDescription("a mixed breed of unknown origin").
-	SetColor("black and white").SetAge(3).SetAgeEstimated(true).Build()
+		SetColor("black and white").SetAge(3).SetAgeEstimated(true).Build()
 
 	if err != nil {
 		_ = t.ErrorJSON(w, err, http.StatusBadRequest)
@@ -85,7 +85,7 @@ func (app *application) CreateCatWithBuilder(w http.ResponseWriter, r *http.Requ
 
 	// create a cat using the builder pattern
 	p, err := pets.NewPetBuilder().SetSpecies("cat").SetBreed("pharaon").SetWeight(15).SetDescription("cat from old Egypt").SetGeographicOrigin("Egypt").
-	SetColor("red and black like a tiger").SetAge(5).SetAgeEstimated(true).Build()
+		SetColor("red and black like a tiger").SetAge(5).SetAgeEstimated(true).Build()
 
 	if err != nil {
 		_ = t.ErrorJSON(w, err, http.StatusBadRequest)
@@ -103,4 +103,16 @@ func (app *application) GetAllCatBreeds(w http.ResponseWriter, r *http.Request) 
 	}
 
 	_ = t.WriteJSON(w, http.StatusOK, catBreeds)
+}
+
+func (app *application) AnimalFromAbstractFactory(w http.ResponseWriter, r *http.Request) {
+	// setup toolbox
+
+	// get species from url itself
+
+	// get breed from the url
+
+	// create a pet from abstract factory
+
+	// write the result as json
 }
