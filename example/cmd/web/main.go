@@ -1,6 +1,7 @@
 package main
 
 import (
+	"example/adapters"
 	"example/configuration"
 	"flag"
 	"fmt"
@@ -16,7 +17,6 @@ type application struct {
 	templateMap map[string]*template.Template
 	config      appConfig
 	App *configuration.Application
-	catService *RemoteService
 }
 
 type appConfig struct {
@@ -40,14 +40,13 @@ func main() {
 		log.Panic(err)
 	}
 
-	//jsonBackend := &JSONBackend{}
-	//jsonAdapter := &RemoteService{Remote: jsonBackend}
+	//jsonBackend := &adapters.JSONBackend{}
+	//jsonAdapter := &adapters.RemoteService{Remote: jsonBackend}
 
-	xmlBackend := &XMLBackend{}
-	xmlAdapter := &RemoteService{Remote: xmlBackend}
+	xmlBackend := &adapters.XMLBackend{}
+	xmlAdapter := &adapters.RemoteService{Remote: xmlBackend}
 
-	app.App = configuration.New(db)
-	app.catService = xmlAdapter
+	app.App = configuration.New(db, xmlAdapter)
 	
 	srv := &http.Server{
 		Addr:              port,
