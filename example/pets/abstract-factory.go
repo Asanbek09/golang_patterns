@@ -28,9 +28,10 @@ func (cff *CatFromFactory) Show() string {
 
 type PetFactoryInterface interface {
 	newPet() AnimalInterface
+	newPetWithBreed(breed string) AnimalInterface
 }
 
-type DogAbstractFactory struct {}
+type DogAbstractFactory struct{}
 
 func (df *DogAbstractFactory) newPet() AnimalInterface {
 	return &DogFromFactory{
@@ -38,7 +39,27 @@ func (df *DogAbstractFactory) newPet() AnimalInterface {
 	}
 }
 
-type CatAbstractFactory struct {}
+func (df *DogAbstractFactory) newPetWithBreed(b string) AnimalInterface {
+	//app := configuration.GetInstance()
+	//breed, _ := app.Models.DogBreed.GetBreedByName(b)
+	return &DogFromFactory{
+		Pet: &models.Dog{
+			//Breed: breed,
+		},
+	}
+}
+
+type CatAbstractFactory struct{}
+
+func (cf *CatAbstractFactory) newPetWithBreed(b string) AnimalInterface {
+	// get breed for cat
+
+	return &CatFromFactory{
+		Pet: &models.Cat{
+			// breed
+		},
+	}
+}
 
 func (df *CatAbstractFactory) newPet() AnimalInterface {
 	return &CatFromFactory{
@@ -65,7 +86,9 @@ func NewPetWithBreedFromAbstractFactory(species, breed string) (AnimalInterface,
 	switch species {
 	case "dog":
 		// return a dog with breed embedded
-		return &DogFromFactory{}, nil
+		var dogFactory DogAbstractFactory
+		dog := dogFactory.newPetWithBreed(breed)
+		return dog, nil
 	case "cat":
 		// return a cat with breed embedded
 		return &CatFromFactory{}, nil
