@@ -40,11 +40,14 @@ func main() {
 		log.Panic(err)
 	}
 
-	jsonBackend := &JSONBackend{}
-	jsonAdapter := &RemoteService{Remote: jsonBackend}
+	//jsonBackend := &JSONBackend{}
+	//jsonAdapter := &RemoteService{Remote: jsonBackend}
+
+	xmlBackend := &XMLBackend{}
+	xmlAdapter := &RemoteService{Remote: xmlBackend}
 
 	app.App = configuration.New(db)
-	app.catService = jsonAdapter
+	app.catService = xmlAdapter
 	
 	srv := &http.Server{
 		Addr:              port,
