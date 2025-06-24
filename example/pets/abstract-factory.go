@@ -5,6 +5,7 @@ import (
 	"example/configuration"
 	"example/models"
 	"fmt"
+	"log"
 )
 
 type AnimalInterface interface {
@@ -54,10 +55,16 @@ type CatAbstractFactory struct{}
 
 func (cf *CatAbstractFactory) newPetWithBreed(b string) AnimalInterface {
 	// get breed for cat
+	app := configuration.GetInstance()
+	breed, err := app.CatService.Remote.GetCatBreedByName(b)
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
 
 	return &CatFromFactory{
 		Pet: &models.Cat{
-			// breed
+			Breed: *breed,
 		},
 	}
 }
@@ -92,7 +99,9 @@ func NewPetWithBreedFromAbstractFactory(species, breed string) (AnimalInterface,
 		return dog, nil
 	case "cat":
 		// return a cat with breed embedded
-		return &CatFromFactory{}, nil
+		var catFactory CatAbstractFactory
+		cat := catFactory.newPetWithBreed(breed)
+		return cat, nil
 	default:
 		return nil, errors.New("invalid species supplied")
 	}
