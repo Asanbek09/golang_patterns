@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"log"
 	"time"
 )
 
@@ -43,4 +44,36 @@ func (m *postgresRepository) AllDogBreeds() ([]*DogBreed, error) {
 	}
 
 	return breeds, nil
+}
+
+func (m *postgresRepository) GetBreedByName(b string) (*DogBreed, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `select id, breed, weight_low_lbs, weight_high_lbs,
+				((weight_low_lbs + weight_high_lbs) / 2)::INTEGER AS average_weight,
+				lifespan, coalesce(details, ''),
+				coalesce(alternate_names, ''), coalesce(geographic_origin, '')
+				from dog_breeds where breed = ?`
+	
+	row := m.DB.QueryRowContext(ctx, query, b)
+	var dogBreed DogBreed
+	err := row.Scan(
+		&dogBreed.ID,
+		&dogBreed.Breed,
+		&dogBreed.WeightLowLbs,
+		&dogBreed.WeightHighLbs,
+		&dogBreed.AverageWeight,
+		&dogBreed.Lifespan,
+		&dogBreed.Details,
+		&dogBreed.AlternateNames,
+		&dogBreed.GeographicOrigin,
+	)
+
+	if err != nil {
+		log.Println("Error getting breed by name: ", err)
+		return nil, err
+	}
+
+	return &dogBreed, nil
 }

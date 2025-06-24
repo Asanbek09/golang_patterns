@@ -2,6 +2,7 @@ package pets
 
 import (
 	"errors"
+	"example/configuration"
 	"example/models"
 	"fmt"
 )
@@ -40,11 +41,11 @@ func (df *DogAbstractFactory) newPet() AnimalInterface {
 }
 
 func (df *DogAbstractFactory) newPetWithBreed(b string) AnimalInterface {
-	//app := configuration.GetInstance()
-	//breed, _ := app.Models.DogBreed.GetBreedByName(b)
+	app := configuration.GetInstance()
+	breed, _ := app.Models.DogBreed.GetBreedByName(b)
 	return &DogFromFactory{
 		Pet: &models.Dog{
-			//Breed: breed,
+			Breed: *breed,
 		},
 	}
 }
