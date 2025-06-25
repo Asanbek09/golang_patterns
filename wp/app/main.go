@@ -1,6 +1,9 @@
 package main
 
-import "streamer"
+import (
+	"fmt"
+	"streamer"
+)
 
 func main() {
 	// define number of workers and jobs
@@ -15,7 +18,8 @@ func main() {
 	defer close(videoQueue)
 
 	// Get a worker pool
-
+	wp := streamer.New(videoQueue, numWorkers)
+	fmt.Println("wp: ", wp)
 
 	// Start the worker pool
 
@@ -26,5 +30,5 @@ func main() {
 
 
 	// print out results
-	
+
 }
