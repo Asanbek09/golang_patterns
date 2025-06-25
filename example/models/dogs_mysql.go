@@ -54,7 +54,7 @@ func (m *postgresRepository) GetBreedByName(b string) (*DogBreed, error) {
 				((weight_low_lbs + weight_high_lbs) / 2)::INTEGER AS average_weight,
 				lifespan, coalesce(details, ''),
 				coalesce(alternate_names, ''), coalesce(geographic_origin, '')
-				from dog_breeds where breed = $1`
+				from dog_breeds where breed ilike $1`
 
 	row := m.DB.QueryRowContext(ctx, query, b)
 	var dogBreed DogBreed
