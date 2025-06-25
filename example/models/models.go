@@ -23,6 +23,17 @@ func New(conn *sql.DB) *Models {
 	}
 }
 
+type DogOfMonth struct {
+	ID int
+	Dog *Dog
+	Video string
+	Image string
+}
+
+func (d *Dog) GetDogOfMonthByID(id int) (*DogOfMonth, error) {
+	return repo.GetDogOfMonthByID((id))
+}
+
 type DogBreed struct {
 	ID               int    `json:"id"`
 	Breed            string `json:"breed"`
