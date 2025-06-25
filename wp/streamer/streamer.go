@@ -8,11 +8,21 @@ type ProcessingMessage struct {
 }
 
 type VideoProcessingJob struct {
-
+	Video Video
 }
 
 type Processor struct {
+	Engine Encoder
+}
 
+type Video struct {
+	ID int
+	InputFile string
+	OutputDir string
+	EncodingType string
+	NotifyChan chan ProcessingMessage
+	// Options *VideoOptions
+	Encoder Processor
 }
 
 func New(jobQueue chan VideoProcessingJob, maxWorkers int) *VideoDispatcher {
