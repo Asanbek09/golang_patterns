@@ -83,7 +83,7 @@ func (m *postgresRepository) GetDogOfMonthByID(id int) (*DogOfMonth, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := `select id, video, image dog_of_month where id = $1`
+	query := `select id, video, image from dog_of_month where id = $1`
 
 	row := m.DB.QueryRowContext(ctx, query, id)
 	var dog DogOfMonth
