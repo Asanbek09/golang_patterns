@@ -8,3 +8,6 @@ go get github.com/lib/pq
 
 Установить данный пакет в директории wp/streamer
 https://github.com/xfrr/goffmpeg
+go get github.com/tsawler/toolbox
+
+go mod tidy
