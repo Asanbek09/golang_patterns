@@ -4,3 +4,7 @@ https://github.com/go-chi/chi
 go get -u github.com/tsawler/toolbox
 go get -u github.com/go-sql-driver/mysql
 go get github.com/lib/pq
+
+
+Установить данный пакет в директории wp/streamer
+https://github.com/xfrr/goffmpeg
