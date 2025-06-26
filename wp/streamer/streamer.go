@@ -23,21 +23,21 @@ type Processor struct {
 }
 
 type Video struct {
-	ID int
-	InputFile string
-	OutputDir string
+	ID           int
+	InputFile    string
+	OutputDir    string
 	EncodingType string
-	NotifyChan chan ProcessingMessage
-	Options *VideoOptions
-	Encoder Processor
+	NotifyChan   chan ProcessingMessage
+	Options      *VideoOptions
+	Encoder      Processor
 }
 
 type VideoOptions struct {
-	RenameOutput bool
+	RenameOutput    bool
 	SegmentDuration int
-	MaxRate1080p string
-	MaxRate720p string
-	MaxRate480p string
+	MaxRate1080p    string
+	MaxRate720p     string
+	MaxRate480p     string
 }
 
 func (vd *VideoDispatcher) NewVideo(id int, input, output, encType string, notifyChan chan ProcessingMessage, ops *VideoOptions) Video {
@@ -45,16 +45,14 @@ func (vd *VideoDispatcher) NewVideo(id int, input, output, encType string, notif
 		ops = &VideoOptions{}
 	}
 
-	fmt.Println("NewVideo - New video created:", id, input)
-
 	return Video{
-		ID: id,
-		InputFile: input,
-		OutputDir: output,
+		ID:           id,
+		InputFile:    input,
+		OutputDir:    output,
 		EncodingType: encType,
-		NotifyChan: notifyChan,
-		Encoder: vd.Processor,
-		Options: ops,
+		NotifyChan:   notifyChan,
+		Encoder:      vd.Processor,
+		Options:      ops,
 	}
 }
 
@@ -64,8 +62,7 @@ func (v *Video) encode() {
 	switch v.EncodingType {
 	case "mp4":
 		// encode the video
-		fmt.Println("v.encode () About to encode to mp4:", v.ID)
-		name, err := v.encodeToMp4()
+		name, err := v.encodeToMP4()
 		if err != nil {
 			// send information to the notifyChan
 			v.sendToNotifyChan(false, "", fmt.Sprintf("encode failed for %d: %s", v.ID, err.Error()))
@@ -73,60 +70,84 @@ func (v *Video) encode() {
 		}
 		fileName = fmt.Sprintf("%s.mp4", name)
 
+	case "hls":
+		// encode the video
+		name, err := v.encodeToHLS()
+		if err != nil {
+			// send information to the notifyChan
+			v.sendToNotifyChan(false, "", fmt.Sprintf("encode failed for %d: %s", v.ID, err.Error()))
+			return
+		}
+		fileName = fmt.Sprintf("%s.m3u8", name)
+
 	default:
-		fmt.Println("v.encode() - error trying to encode video", v.ID)
-		v.sendToNotifyChan(false, "", fmt.Sprintf("error processing for %d invalid encoding type", v.ID))
+		v.sendToNotifyChan(false, "", fmt.Sprintf("error processing for %d: invalid encoding type", v.ID))
 		return
 	}
 
-	fmt.Println("v.encode() - sending success message gor video id", v.ID, " notifyChan")
-	v.sendToNotifyChan(true, fileName, fmt.Sprintf("video %d processed and saved as %s", v.ID, fmt.Sprintf("%s/%s", v.OutputDir, fileName)))
+	v.sendToNotifyChan(true, fileName, fmt.Sprintf("video id %d processed and saved as %s", v.ID, fmt.Sprintf("%s/%s", v.OutputDir, fileName)))
 }
 
-func (v *Video) encodeToMp4() (string, error) {
+func (v *Video) encodeToMP4() (string, error) {
 	baseFileName := ""
-	fmt.Println("v.encodeToMP4 - about to try to encode video id", v.ID)
+
 	if !v.Options.RenameOutput {
-		// get the base file name
+		// Get the base file name.
 		b := path.Base(v.InputFile)
 		baseFileName = strings.TrimSuffix(b, filepath.Ext(b))
 	} else {
-		// todo: generate random file name
+		// TODO: Generate random file name
 	}
 
 	err := v.Encoder.Engine.EncodeToMP4(v, baseFileName)
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("v.encodeToMP4: successfully encoded video id", v.ID)
+
+	return baseFileName, nil
+}
+
+func (v *Video) encodeToHLS() (string, error) {
+	baseFileName := ""
+
+	if !v.Options.RenameOutput {
+		// Get the base file name.
+		b := path.Base(v.InputFile)
+		baseFileName = strings.TrimSuffix(b, filepath.Ext(b))
+	} else {
+		// TODO: Generate random file name
+	}
+
+	err := v.Encoder.Engine.EncodeToHLS(v, baseFileName)
+	if err!= nil {
+		return "", err
+	}
 
 	return baseFileName, nil
 }
 
 func (v *Video) sendToNotifyChan(successful bool, fileName, message string) {
-	fmt.Println("v.sendToNotifyChan - sending message to notifyChan for video id", v.ID)
 	v.NotifyChan <- ProcessingMessage{
-		ID: v.ID,
+		ID:         v.ID,
 		Successful: successful,
-		Message: message,
+		Message:    message,
 		OutputFile: fileName,
 	}
 }
 
 func New(jobQueue chan VideoProcessingJob, maxWorkers int) *VideoDispatcher {
-	fmt.Println("New: creating worker pool")
 	workerPool := make(chan chan VideoProcessingJob, maxWorkers)
-	
-	// todo implement processor logic
+
+	// TODO: implement processor logic
 	var e VideoEncoder
 	p := Processor{
 		Engine: &e,
 	}
 
 	return &VideoDispatcher{
-		jobQueue: jobQueue,
+		jobQueue:   jobQueue,
 		maxWorkers: maxWorkers,
 		WorkerPool: workerPool,
-		Processor: p,
+		Processor:  p,
 	}
 }
